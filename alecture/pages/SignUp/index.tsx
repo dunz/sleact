@@ -21,7 +21,7 @@ const SignUp = () => {
             setPassword(e.target.value);
             setMismatchError(passwordCheck !== e.target.value);
         },
-        [passwordCheck],
+        [passwordCheck]
     );
 
     const onChangePasswordCheck = useCallback(
@@ -29,7 +29,7 @@ const SignUp = () => {
             setPasswordCheck(e.target.value);
             setMismatchError(password !== e.target.value);
         },
-        [password],
+        [password]
     );
 
     const onSubmit = useCallback(
@@ -51,15 +51,12 @@ const SignUp = () => {
                     });
             }
         },
-        [email, nickname, password, mismatchError],
+        [email, nickname, password, mismatchError]
     );
 
-    if (userData === undefined) {
-        return <div></div>;
-    }
-    if (userData) {
-        return <Redirect to="/workspace/sleact" />;
-    }
+    // if (userData) {
+    //   return <Redirect to="/workspace/sleact" />;
+    // }
 
     return (
         <div id="container">

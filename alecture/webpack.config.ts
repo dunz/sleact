@@ -1,8 +1,8 @@
 import path from 'path';
 // import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import webpack from 'webpack';
-// import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -41,17 +41,17 @@ const config: webpack.Configuration = {
                         '@babel/preset-react',
                         '@babel/preset-typescript',
                     ],
-                    // env: {
-                    //     development: {
-                    //         plugins: [
-                    //             ['@emotion/babel-plugin', { sourceMap: true }],
-                    //             require.resolve('react-refresh/babel'),
-                    //         ],
-                    //     },
-                    //     production: {
-                    //         plugins: ['@emotion/babel-plugin'],
-                    //     },
-                    // },
+                    env: {
+                        development: {
+                            plugins: [
+                                ['@emotion/babel-plugin', { sourceMap: true }],
+                                require.resolve('react-refresh/babel'),
+                            ],
+                        },
+                        production: {
+                            plugins: ['@emotion/babel-plugin'],
+                        },
+                    },
                 },
                 exclude: path.join(__dirname, 'node_modules'),
             },
@@ -62,40 +62,40 @@ const config: webpack.Configuration = {
         ],
     },
     plugins: [
-        // new ForkTsCheckerWebpackPlugin({
-        //     async: false,
-        //     // eslint: {
-        //     //   files: "./src/**/*",
-        //     // },
-        // }),
-        // new webpack.EnvironmentPlugin({ NODE_ENV: isDevelopment ? 'development' : 'production' }),
+        new ForkTsCheckerWebpackPlugin({
+            async: false,
+            // eslint: {
+            //   files: "./src/**/*",
+            // },
+        }),
+        new webpack.EnvironmentPlugin({ NODE_ENV: isDevelopment ? 'development' : 'production' }),
     ],
     output: {
         path: path.join(__dirname, 'dist'),
         filename: '[name].js',
         publicPath: '/dist/',
     },
-    // devServer: {
-    //     historyApiFallback: true,
-    //     port: 3090,
-    //     publicPath: '/dist/',
-    //     proxy: {
-    //         '/api/': {
-    //             target: 'http://localhost:3095',
-    //             changeOrigin: true,
-    //         },
-    //     },
-    // },
+    devServer: {
+        historyApiFallback: true,
+        port: 3090,
+        publicPath: '/dist/',
+        // proxy: {
+        //   '/api/': {
+        //     target: 'http://localhost:3095',
+        //     changeOrigin: true,
+        //   },
+        // },
+    },
 };
 
-// if (isDevelopment && config.plugins) {
-//     config.plugins.push(new webpack.HotModuleReplacementPlugin());
-//     config.plugins.push(new ReactRefreshWebpackPlugin());
-//     config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: 'server', openAnalyzer: false }));
-// }
-// if (!isDevelopment && config.plugins) {
-//     config.plugins.push(new webpack.LoaderOptionsPlugin({ minimize: true }));
-//     config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: 'static' }));
-// }
+if (isDevelopment && config.plugins) {
+    config.plugins.push(new webpack.HotModuleReplacementPlugin());
+    // config.plugins.push(new ReactRefreshWebpackPlugin());
+    config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: 'server', openAnalyzer: false }));
+}
+if (!isDevelopment && config.plugins) {
+    config.plugins.push(new webpack.LoaderOptionsPlugin({ minimize: true }));
+    config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: 'static' }));
+}
 
 export default config;
