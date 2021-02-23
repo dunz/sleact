@@ -163,9 +163,9 @@ const Channel = () => {
         //     />
         //     <ToastContainer position="bottom-center" />
         // </Container>
-        <Workspace>
-            <div>로그인 하신것을 축하드려요!</div>
-        </Workspace>
+        <Container>
+            <Header>채널!</Header>
+        </Container>
     );
 };
 
