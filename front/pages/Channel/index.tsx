@@ -18,20 +18,20 @@ import Workspace from '@layouts/Workspace';
 
 const PAGE_SIZE = 20;
 const Channel = () => {
-    // const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
+    const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
     // const [socket] = useSocket(workspace);
-    // const { data: userData } = useSWR<IUser>('/api/users', fetcher);
+    const { data: userData } = useSWR<IUser>('/api/users', fetcher);
     // const { data: channelsData } = useSWR<IChannel[]>(`/api/workspaces/${workspace}/channels`, fetcher);
     // const channelData = channelsData?.find((v) => v.name === channel);
     // const { data: chatData, mutate: mutateChat, setSize } = useSWRInfinite<IChat[]>(
     //     (index) => `/api/workspaces/${workspace}/channels/${channel}/chats?perPage=${PAGE_SIZE}&page=${index + 1}`,
     //     fetcher,
     // );
-    // const { data: channelMembersData } = useSWR<IUser[]>(
-    //     userData ? `/api/workspaces/${workspace}/channels/${channel}/members` : null,
-    //     fetcher,
-    // );
-    // const [chat, onChangeChat, setChat] = useInput('');
+    const { data: channelMembersData } = useSWR<IUser[]>(
+        userData ? `/api/workspaces/${workspace}/channels/${channel}/members` : null,
+        fetcher,
+    );
+    const [chat, onChangeChat, setChat] = useInput('');
     // const [showInviteChannelModal, setShowInviteChannelModal] = useState(false);
     // const scrollbarRef = useRef<Scrollbars>(null);
     //
@@ -41,40 +41,41 @@ const Channel = () => {
     // const onCloseModal = useCallback(() => {
     //     setShowInviteChannelModal(false);
     // }, []);
-    //
-    // const onSubmitForm = useCallback(
-    //     (e) => {
-    //         e.preventDefault();
-    //         if (chat?.trim() && chatData && channelData && userData) {
-    //             const savedChat = chat;
-    //             mutateChat((prevChatData) => {
-    //                 prevChatData?.[0].unshift({
-    //                     id: (chatData[0][0]?.id || 0) + 1,
-    //                     content: savedChat,
-    //                     userId: userData.id,
-    //                     user: userData,
-    //                     createdAt: new Date(),
-    //                     channelId: channelData.id,
-    //                     channel: channelData,
-    //                 });
-    //                 return prevChatData;
-    //             }, false).then(() => {
-    //                 setChat('');
-    //                 if (scrollbarRef.current) {
-    //                     console.log('scrollToBottom!', scrollbarRef.current?.getValues());
-    //                     scrollbarRef.current.scrollToBottom();
-    //                 }
-    //             });
-    //             axios
-    //                 .post(`/api/workspaces/${workspace}/channels/${channel}/chats`, {
-    //                     content: savedChat,
-    //                 })
-    //                 .catch(console.error);
-    //         }
-    //     },
-    //     [chat, workspace, channel, channelData, userData, chatData],
-    // );
-    //
+
+    const onSubmitForm = useCallback(
+        (e) => {
+            e.preventDefault();
+            // if (chat?.trim() && chatData && channelData && userData) {
+            //     const savedChat = chat;
+            //     mutateChat((prevChatData) => {
+            //         prevChatData?.[0].unshift({
+            //             id: (chatData[0][0]?.id || 0) + 1,
+            //             content: savedChat,
+            //             userId: userData.id,
+            //             user: userData,
+            //             createdAt: new Date(),
+            //             channelId: channelData.id,
+            //             channel: channelData,
+            //         });
+            //         return prevChatData;
+            //     }, false).then(() => {
+            //         setChat('');
+            //         if (scrollbarRef.current) {
+            //             console.log('scrollToBottom!', scrollbarRef.current?.getValues());
+            //             scrollbarRef.current.scrollToBottom();
+            //         }
+            //     });
+            //     axios
+            //         .post(`/api/workspaces/${workspace}/channels/${channel}/chats`, {
+            //             content: savedChat,
+            //         })
+            //         .catch(console.error);
+            // }
+        },
+        // [chat, workspace, channel, channelData, userData, chatData],
+        [chat, workspace, channel],
+    );
+
     // const onMessage = (data: IChat) => {
     //     if (data.channel.name === channel && data.userId !== userData?.id) {
     //         mutateChat((chatData) => {
@@ -165,6 +166,13 @@ const Channel = () => {
         // </Container>
         <Container>
             <Header>채널!</Header>
+            <ChatBox
+                onSubmitForm={onSubmitForm}
+                chat={chat}
+                onChangeChat={onChangeChat}
+                placeholder={`Message #${channel}`}
+                data={channelMembersData}
+            />
         </Container>
     );
 };

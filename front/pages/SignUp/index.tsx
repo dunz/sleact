@@ -7,7 +7,7 @@ import { Link, Redirect } from 'react-router-dom';
 import useSWR from 'swr';
 
 const SignUp = () => {
-    const { data: userData } = useSWR('http://localhost:3095/api/users', fetcher);
+    const { data: userData } = useSWR('/api/users', fetcher);
     const [signUpError, setSignUpError] = useState(false);
     const [signUpSuccess, setSignUpSuccess] = useState(false);
     const [mismatchError, setMismatchError] = useState(false);
@@ -42,7 +42,7 @@ const SignUp = () => {
                 setSignUpError(false);
                 setSignUpSuccess(false);
                 axios
-                    .post('http://localhost:3095/api/users', { email, nickname, password })
+                    .post('/api/users', { email, nickname, password })
                     .then(() => {
                         setSignUpSuccess(true);
                     })

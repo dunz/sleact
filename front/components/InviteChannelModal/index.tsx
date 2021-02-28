@@ -10,53 +10,56 @@ import { toast } from 'react-toastify';
 import useSWR from 'swr';
 
 interface Props {
-  show: boolean;
-  onCloseModal: () => void;
-  setShowInviteChannelModal: (flag: boolean) => void;
+    show: boolean;
+    onCloseModal: () => void;
+    setShowInviteChannelModal: (flag: boolean) => void;
 }
+
 const InviteChannelModal: FC<Props> = ({ show, onCloseModal, setShowInviteChannelModal }) => {
-  const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
-  const [newMember, onChangeNewMember, setNewMember] = useInput('');
-  const { data: userData } = useSWR<IUser>('/api/user', fetcher);
-  const { revalidate: revalidateMembers } = useSWR<IUser[]>(
-    userData ? `/api/workspaces/${workspace}/channels/${channel}/members` : null,
-    fetcher,
-  );
+    if (!show) return null;
 
-  const onInviteMember = useCallback(
-    (e) => {
-      e.preventDefault();
-      if (!newMember || !newMember.trim()) {
-        return;
-      }
-      axios
-        .post(`/api/workspaces/${workspace}/channels/${channel}/member`, {
-          email: newMember,
-        })
-        .then(() => {
-          revalidateMembers();
-          setShowInviteChannelModal(false);
-          setNewMember('');
-        })
-        .catch((error) => {
-          console.dir(error);
-          toast.error(error.response?.data, { position: 'bottom-center' });
-        });
-    },
-    [newMember],
-  );
+    const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
+    const [newMember, onChangeNewMember, setNewMember] = useInput('');
+    const { data: userData } = useSWR<IUser>('/api/user', fetcher);
+    const { revalidate: revalidateMembers } = useSWR<IUser[]>(
+        userData ? `/api/workspaces/${workspace}/channels/${channel}/members` : null,
+        fetcher,
+    );
 
-  return (
-    <Modal show={show} onCloseModal={onCloseModal}>
-      <form onSubmit={onInviteMember}>
-        <Label id="member-label">
-          <span>채널 멤버 초대</span>
-          <Input id="member" value={newMember} onChange={onChangeNewMember} />
-        </Label>
-        <Button type="submit">초대하기</Button>
-      </form>
-    </Modal>
-  );
+    const onInviteMember = useCallback(
+        (e) => {
+            e.preventDefault();
+            if (!newMember || !newMember.trim()) {
+                return;
+            }
+            axios
+                .post(`/api/workspaces/${workspace}/channels/${channel}/member`, {
+                    email: newMember,
+                })
+                .then(() => {
+                    revalidateMembers();
+                    setShowInviteChannelModal(false);
+                    setNewMember('');
+                })
+                .catch((error) => {
+                    console.dir(error);
+                    toast.error(error.response?.data, { position: 'bottom-center' });
+                });
+        },
+        [newMember],
+    );
+
+    return (
+        <Modal show={show} onCloseModal={onCloseModal}>
+            <form onSubmit={onInviteMember}>
+                <Label id="member-label">
+                    <span>채널 멤버 초대</span>
+                    <Input id="member" value={newMember} onChange={onChangeNewMember} />
+                </Label>
+                <Button type="submit">초대하기</Button>
+            </form>
+        </Modal>
+    );
 };
 
 export default InviteChannelModal;

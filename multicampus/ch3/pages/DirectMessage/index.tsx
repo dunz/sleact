@@ -92,7 +92,6 @@ const DirectMessage = () => {
 
   useEffect(() => {
     if (chatData?.length === 1) {
-      console.log('toBottomWhenLoaded', chatData, scrollbarRef.current?.getValues());
       scrollbarRef.current?.scrollToBottom();
     }
   }, [chatData]);
