@@ -13,7 +13,7 @@ interface Props {
 
 const Chat: FC<Props> = memo(({ data }) => {
     const { workspace } = useParams<{ workspace: string; channel: string }>();
-    const user: IUser = 'sender' in data ? data.sender : data.user;
+    const user: IUser = 'Sender' in data ? (data as any).Sender : (data as any).user;
 
     const result = useMemo<(string | JSX.Element)[]>(
         () =>
@@ -40,11 +40,11 @@ const Chat: FC<Props> = memo(({ data }) => {
     return (
         <ChatWrapper>
             <div className="chat-img">
-                {/*<img src={gravatar.url(user.email, { s: '36px', d: 'retro' })} alt={user.nickname} />*/}
+                <img src={gravatar.url(user.email, { s: '36px', d: 'retro' })} alt={user.nickname} />
             </div>
             <div className="chat-text">
                 <div className="chat-user">
-                    {/*<b>{user.nickname}</b>*/}
+                    <b>{user.nickname}</b>
                     <span>{dayjs(data.createdAt).format('h:mm A')}</span>
                 </div>
                 <p>{result}</p>

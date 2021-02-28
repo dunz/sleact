@@ -106,7 +106,7 @@ const DirectMessage = () => {
         return null;
     }
 
-    console.log('userData', userData);
+    console.log('userData', chatData);
 
     const chatSections = makeSection(chatData ? ([] as IDM[]).concat(...chatData).reverse() : []);
 
