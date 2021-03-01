@@ -18,9 +18,6 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useSWR from 'swr';
 
-const Channel = loadable(() => import('@pages/Channel'));
-const DirectMessage = loadable(() => import('@pages/DirectMessage'));
-
 import {
     AddButton,
     Channels,
@@ -39,6 +36,9 @@ import {
 } from './styles';
 import loadable from '@loadable/component';
 import InviteChannelModal from '@components/InviteChannelModal';
+
+const Channel = loadable(() => import('@pages/Channel'));
+const DirectMessage = loadable(() => import('@pages/DirectMessage'));
 
 const Workspace: VFC = () => {
     const params = useParams<{ workspace?: string }>();
@@ -156,7 +156,7 @@ const Workspace: VFC = () => {
                 <RightMenu>
                     <span onClick={onClickUserProfile}>
                         <ProfileImg
-                            src={gravatar.url(userData.nickname, { s: '28px', d: 'retro' })}
+                            src={gravatar.url(userData.email, { s: '28px', d: 'retro' })}
                             alt={userData.nickname}
                         />
                         <Menu style={{ right: 0, top: 38 }} show={showUserMenu} onCloseModal={onClickUserProfile}>

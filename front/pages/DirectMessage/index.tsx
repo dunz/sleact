@@ -20,7 +20,7 @@ const DirectMessage = () => {
     const [socket] = useSocket(workspace);
     const { data: myData } = useSWR('/api/users', fetcher);
     const { data: userData } = useSWR(`/api/workspaces/${workspace}/users/${id}`, fetcher);
-    const { data: chatData, mutate: mutateChat, setSize } = useSWRInfinite<IDM[]>(
+    const { data: chatData, mutate: mutateChat, setSize, revalidate } = useSWRInfinite<IDM[]>(
         (index) => `/api/workspaces/${workspace}/dms/${id}/chats?perPage=${PAGE_SIZE}&page=${index + 1}`,
         fetcher,
     );
@@ -39,8 +39,8 @@ const DirectMessage = () => {
                     prevChatData?.[0].unshift({
                         id: (chatData[0][0]?.id || 0) + 1,
                         content: savedChat,
-                        senderId: myData.id,
-                        sender: myData,
+                        SenderId: myData.id,
+                        Sender: myData,
                         receiverId: userData.id,
                         receiver: userData,
                         createdAt: new Date(),
@@ -57,6 +57,9 @@ const DirectMessage = () => {
                     .post(`/api/workspaces/${workspace}/dms/${id}/chats`, {
                         content: chat,
                     })
+                    .then(() => {
+                        revalidate();
+                    })
                     .catch(console.error);
             }
         },
@@ -64,7 +67,7 @@ const DirectMessage = () => {
     );
 
     const onMessage = (data: IDM) => {
-        if (data.senderId === Number(id) && myData.id !== Number(id)) {
+        if (data.SenderId === Number(id) && myData.id !== Number(id)) {
             mutateChat((chatData) => {
                 chatData?.[0].unshift(data);
                 return chatData;
@@ -105,8 +108,6 @@ const DirectMessage = () => {
     if (!userData || !myData) {
         return null;
     }
-
-    console.log('userData', chatData);
 
     const chatSections = makeSection(chatData ? ([] as IDM[]).concat(...chatData).reverse() : []);
 

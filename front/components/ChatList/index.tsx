@@ -24,6 +24,8 @@ const ChatList: VFC<Props> = ({ scrollbarRef, isReachingEnd, isEmpty, chatSectio
         [setSize, scrollbarRef, isReachingEnd, isEmpty],
     );
 
+    console.log('chatSections', chatSections);
+
     return (
         <ChatZone>
             <Scrollbars autoHide ref={scrollbarRef} onScrollFrame={onScroll}>
@@ -33,8 +35,8 @@ const ChatList: VFC<Props> = ({ scrollbarRef, isReachingEnd, isEmpty, chatSectio
                             <StickyHeader>
                                 <button>{date}</button>
                             </StickyHeader>
-                            {chats.map((chat, index) => (
-                                <Chat key={chat.id + index} data={chat} />
+                            {chats.map((chat) => (
+                                <Chat key={chat.id} data={chat} />
                             ))}
                         </Section>
                     );

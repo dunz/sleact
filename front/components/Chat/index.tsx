@@ -13,7 +13,7 @@ interface Props {
 
 const Chat: FC<Props> = memo(({ data }) => {
     const { workspace } = useParams<{ workspace: string; channel: string }>();
-    const user: IUser = 'Sender' in data ? (data as any).Sender : (data as any).user;
+    const user: IUser = 'Sender' in data ? (data as any).Sender : (data as any).User;
 
     const result = useMemo<(string | JSX.Element)[]>(
         () =>
@@ -34,8 +34,6 @@ const Chat: FC<Props> = memo(({ data }) => {
             }),
         [data.content],
     );
-
-    console.log('user', user);
 
     return (
         <ChatWrapper>

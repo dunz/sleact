@@ -18,18 +18,18 @@ export interface IChannel {
 
 export interface IChat {
     id: number;
-    userId: number;
-    user: IUser;
+    UserId: number;
+    User: IUser;
     content: string;
     createdAt: Date;
     channelId: number;
-    channel: IChannel;
+    Channel: IChannel;
 }
 
 export interface IDM {
     id: number;
-    senderId: number;
-    sender: IUser;
+    SenderId: number;
+    Sender: IUser;
     receiverId: number;
     receiver: IUser;
     content: string;
